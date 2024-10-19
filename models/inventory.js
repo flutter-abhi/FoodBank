@@ -1,52 +1,48 @@
-const { Sequelize, DataType } = require("sequelize");
-const Food = require('./food');
-const User = require('./users');
-const sequelize = new Sequelize('food_bank_inventory', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
-
-
-const InventoryTransactions = sequelize.define('inventory_transactions', {
+module.exports = (sequelize, DataTypes) => {
+  const InventoryTransactions = sequelize.define('inventory_transactions', {
     transaction_id: {
-        type: DataType.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false
     },
     food_item_id: {
-        type: DataType.INTEGER,
-        allowNull: false,
-        references: {
-            model: Food,
-            key: 'food_item_id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Food',
+        key: 'food_item_id'
+      }
     },
-    //user which resposible for the transaction
     user_id: {
-        type: DataType.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
     },
-
-    // add or remove food item
     transaction_type: {
-        type: DataType.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false
     },
     quantity: {
-        type: DataType.INTEGER,
-        allowNull: false,
-        defaultValue: 1
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1
     },
     transaction_date: {
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
-});
+  });
 
-module.exports = InventoryTransactions;
+  InventoryTransactions.associate = function(models) {
+    InventoryTransactions.belongsTo(models.Food, { foreignKey: 'food_item_id' });
+    InventoryTransactions.belongsTo(models.User, { foreignKey: 'user_id' });
+  };
+
+  return InventoryTransactions;
+};
+

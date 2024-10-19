@@ -1,45 +1,42 @@
-
-const Donor = require('./donor');
-const Food = require('./food');
-const { Sequelize, DataType } = require("sequelize");
-const sequelize = new Sequelize('food_bank_inventory', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
-
-const donation_table = sequelize.define('donation_table', {
+module.exports = (sequelize, DataTypes) => {
+  const DonationTable = sequelize.define('DonationTable', {
     id: {
-        type: DataType.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false
     },
     donar_id: {
-        type: DataType.INTEGER,
-        allowNull: false,
-        references: {
-            model: Donor,
-            key: 'donor_id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Donors',
+        key: 'donor_id'
+      }
     },
     food_id: {
-        type: DataType.INTEGER,
-        allowNull: false,
-        references: {
-            model: Food,
-            key: 'food_item_id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Food',
+        key: 'food_item_id'
+      }
     },
     donation_date: {
-        type: DataType.DATE,
-        allowNull: false
+      type: DataTypes.DATE,
+      allowNull: false
     },
     quantity: {
-        type: DataType.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
-}
+  });
 
-);
+  DonationTable.associate = function(models) {
+    DonationTable.belongsTo(models.Donor, { foreignKey: 'donar_id' });
+    DonationTable.belongsTo(models.Food, { foreignKey: 'food_id' });
+  };
 
-module.exports = donation_table;
+  return DonationTable;
+};
+
