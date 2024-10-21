@@ -1,35 +1,44 @@
 const express = require("express");
 const app = express();
+const db = require('./models');
+const dotenv = require("dotenv");
+dotenv.config();
+const PORT = process.env.PORT || 3030;
+app.use(express.json());
+//routes
+const routes = require("./routes/routs");
+app.use("/foodbank/v1", routes);
 
-const db = require('./models'); // Import the db object
 
-console.log("Starting server...");
+
+// Log database config (consider removing in production)
 console.log("Database config:", db.sequelize.config);
 
-db.sequelize.authenticate()
-    .then(() => {
-        console.log('Connection to the database has been established successfully.');
-        return db.sequelize.sync();
-    })
-    .then(() => {
-        console.log("Database & tables created!");
-        app.listen(3030, () => {
-            console.log("======== app listening at 3030 ==========");
-        });
-    })
-    .catch((error) => {
-        console.error('Unable to create tables:', error);
-    });
+async function startServer() {
+    try {
+        await db.sequelize.authenticate();
+        console.log('Database connection established successfully.');
 
-// Add a test route to check database connection
+        await db.sequelize.sync();
+        console.log("Database & tables created!");
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error('Unable to start server:', error);
+        process.exit(1);
+    }
+}
+
+// Test route for database connection
 app.get('/test-db', async (req, res) => {
     try {
         await db.sequelize.authenticate();
         res.send('Database connection is OK');
     } catch (error) {
-        res.status(500).send('Database connection failed: ' + error.message);
+        res.status(500).send(`Database connection failed: ${error.message}`);
     }
 });
 
-
-
+startServer();

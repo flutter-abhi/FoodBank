@@ -5,25 +5,34 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true
     },
+    role: {
+      type: DataTypes.ENUM('admin', 'volunteer', 'donor'),
+      allowNull: false,
+      defaultValue: 'donor'
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    email: {
+    password: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      unique: true // Make phone number unique
     }
   }, {
     tableName: 'users'
   });
 
-  User.associate = function(models) {
-    User.hasMany(models.FoodDistribution, { foreignKey: 'distributed_by' });
+  User.associate = function (models) {
+    User.hasMany(models.FoodDistribution, {
+      foreignKey: 'distributed_by',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    });
   };
 
   return User;

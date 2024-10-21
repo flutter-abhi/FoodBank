@@ -14,14 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'food_item_id'
       }
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'id'
-      }
-    },
+    
     transaction_type: {
       type: DataTypes.STRING,
       allowNull: false

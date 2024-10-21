@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     donation_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     },
     quantity: {
       type: DataTypes.INTEGER,
