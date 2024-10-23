@@ -41,9 +41,9 @@ const createDonation = async (req, res) => {
         ///
 
         ///
-        /// ethe changes karaychi`
+        /// ethe changes karaychi 
         // Create inventory transaction
-        let inventory_tr = await inventory_transactions.findOne({ where: { name: foodname } });
+        let inventory_tr = await inventory_transactions.findOne({ where: { food_item_id: food.food_item_id } });
         if (!inventory_tr) {
             inventory_tr = await inventory_transactions.create({ food_item_id: food.food_item_id, quantity, transaction_type: "add" });
         } else {

@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         key: 'food_item_id'
       }
     },
-    
     transaction_type: {
       type: DataTypes.STRING,
       allowNull: false
@@ -31,9 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  InventoryTransactions.associate = function(models) {
+  InventoryTransactions.associate = function (models) {
     InventoryTransactions.belongsTo(models.Food, { foreignKey: 'food_item_id' });
-    InventoryTransactions.belongsTo(models.User, { foreignKey: 'user_id' });
   };
 
   return InventoryTransactions;
